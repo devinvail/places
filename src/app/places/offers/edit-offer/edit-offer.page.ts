@@ -1,3 +1,4 @@
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
@@ -11,6 +12,8 @@ import { Place } from '../../places.model';
 })
 export class EditOfferPage implements OnInit {
   place: Place;
+  form: FormGroup;
+
   constructor(
     private navCtrl: NavController,
     private route: ActivatedRoute,
@@ -25,6 +28,25 @@ export class EditOfferPage implements OnInit {
         return;
       }
       this.place = this.placesService.getPlace(paramMap.get('placeId'));
+
+      this.form = new FormGroup({
+        title: new FormControl(this.place.title, {
+          updateOn: 'blur',
+          validators: [Validators.required]
+        }),
+        description: new FormControl(this.place.description, {
+          updateOn: 'blur',
+          validators: [Validators.required]
+        })
+      });
     });
+  }
+
+  onEditOffer() {
+    console.log('form: ', this.form);
+  }
+
+  searchData(value) {
+    console.log('input data: ', value);
   }
 }

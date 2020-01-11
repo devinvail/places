@@ -6,7 +6,38 @@
         [defaultHref]="'/places/tabs/offers/' + 'place.id'"
       ></ion-back-button>
     </ion-buttons>
+    <ion-buttons slot="primary">
+      <ion-button (click)="onEditOffer()" [disabled]="!form.touched">
+        <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding> </ion-content>
+<ion-content padding>
+  <form [formGroup]="form">
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">
+            Title
+          </ion-label>
+          <ion-input type="text" formControlName="title"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">
+            Description
+          </ion-label>
+          <ion-textarea
+            type="text"
+            formControlName="description"
+          ></ion-textarea>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>
