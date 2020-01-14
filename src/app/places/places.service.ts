@@ -1,12 +1,15 @@
-import { AuthService } from './../auth/auth.service';
-import { Place } from './places.model';
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { take, map } from 'rxjs/operators';
+import {AuthService} from './../auth/auth.service';
+import {Place} from './places.model';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject} from 'rxjs';
+import {take, map, tap, delay} from 'rxjs/operators';
+import {LoadingController} from '@ionic/angular';
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PlacesService {
+  private loadingCtr: LoadingController;
   private _places = new BehaviorSubject<Place[]>([
     new Place(
       'p1',
@@ -25,7 +28,7 @@ export class PlacesService {
       'A romantic place in Paris!',
       'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Paris_Night.jpg/1024px-Paris_Night.jpg',
       189.99,
-      new Date('2020-10-05'),
+      new Date('2020-08-05'),
       new Date('2021-10-05'),
       'abc'
     ),
@@ -35,10 +38,10 @@ export class PlacesService {
       'Not your average city trip!',
       'https://upload.wikimedia.org/wikipedia/commons/0/01/San_Francisco_with_two_bridges_and_the_fog.jpg',
       99.99,
-      new Date('2020-10-05'),
-      new Date('2021-10-05'),
+      new Date('2022-10-01'),
+      new Date('2024-10-09'),
       'abc'
-    )
+    ),
   ]);
 
   get places() {
@@ -49,7 +52,7 @@ export class PlacesService {
     return this.places.pipe(
       take(1),
       map(places => {
-        return { ...places.find(p => p.id === id) };
+        return {...places.find(p => p.id === id)};
       })
     );
   }
@@ -72,9 +75,37 @@ export class PlacesService {
       dateTo,
       this.authService.userId
     );
-    this._places.pipe(take(1)).subscribe(places => {
-      this._places.next(places.concat(newPlace));
-    });
+    return this._places.pipe(
+      take(1),
+      delay(1000),
+      tap(places => {
+        this._places.next(places.concat(newPlace));
+      })
+    );
+  }
+
+  editPlace(title: string, description: string, id: string) {
+    return this.places.pipe(
+      take(1),
+      delay(1500),
+      delay(1000),
+      tap(places => {
+        const placeIndex = places.findIndex(pl => pl.id === id);
+        const updatedPlaces = [...places];
+        const oldPlace = updatedPlaces[placeIndex];
+        updatedPlaces[placeIndex] = new Place(
+          oldPlace.id,
+          title,
+          description,
+          oldPlace.imageUrl,
+          oldPlace.price,
+          oldPlace.availableFrom,
+          oldPlace.availableTo,
+          oldPlace.userId
+        );
+        this._places.next(updatedPlaces);
+      })
+    );
   }
 
   constructor(private authService: AuthService) {}
