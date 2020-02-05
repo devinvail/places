@@ -1,14 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NavController } from '@ionic/angular';
-import { Place } from '../../places.model';
-import { ActivatedRoute } from '@angular/router';
-import { PlacesService } from '../../places.service';
-import { Subscription } from 'rxjs';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {NavController} from '@ionic/angular';
+import {Place} from '../../places.model';
+import {ActivatedRoute} from '@angular/router';
+import {PlacesService} from '../../places.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-offer-bookings',
   templateUrl: './offer-bookings.page.html',
-  styleUrls: ['./offer-bookings.page.scss']
+  styleUrls: ['./offer-bookings.page.scss'],
 })
 export class OfferBookingsPage implements OnInit, OnDestroy {
   place: Place;
@@ -26,9 +26,11 @@ export class OfferBookingsPage implements OnInit, OnDestroy {
         this.navCtrl.navigateBack('/places/tabs/offers');
         return;
       }
-      this.placeSub = this.placesService.getPlace(paramMap.get('placeId')).subscribe( place => {
-        this.place = place;
-      });
+      this.placeSub = this.placesService
+        .getPlace(paramMap.get('placeId'))
+        .subscribe(place => {
+          this.place = place;
+        });
     });
   }
 
@@ -36,10 +38,9 @@ export class OfferBookingsPage implements OnInit, OnDestroy {
     this.navCtrl.navigateBack('/places/tabs/offers');
   }
 
-  ngOnDestroy(){
-    if(this.placeSub)
-    {
-    this.placeSub.unsubscribe();
+  ngOnDestroy() {
+    if (this.placeSub) {
+      this.placeSub.unsubscribe();
     }
   }
 }

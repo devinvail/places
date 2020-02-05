@@ -1,13 +1,13 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>{{ place.title }}</ion-title>
+    <ion-title>{{ place?.title }}</ion-title>
     <ion-buttons slot="start">
       <ion-back-button
-        [defaultHref]="'/places/tabs/offers/' + 'place.id'"
+        [defaultHref]="'/places/tabs/offers/' + placeId"
       ></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="primary">
-      <ion-button (click)="editPlace()" [disabled]="!form.touched">
+      <ion-button (click)="editPlace()" [disabled]="!form?.touched">
         <ion-icon slot="icon-only" name="checkmark"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -15,7 +15,10 @@
 </ion-header>
 
 <ion-content padding>
-  <form [formGroup]="form">
+  <div *ngIf="isLoading" text-center>
+    <ion-spinner></ion-spinner>
+  </div>
+  <form *ngIf="!isLoading" [formGroup]="form">
     <ion-row>
       <ion-col>
         <ion-item>
